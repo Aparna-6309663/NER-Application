@@ -1,1 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Named Entity Recognition</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Named Entity Recognition</h1>
+    <div class="mt-3">
+        <label for="inputText">Input Text</label>
+        <textarea id="inputText" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="mt-3">
+        <label for="type">Select Type</label>
+        <select id="type" class="form-control">
+            <option value="PERSON">Person</option>
+            <option value="CITY">City</option>
+            <option value="STATE_OR_PROVINCE">State or Province</option>
+            <option value="COUNTRY">Country</option>
+            <option value="EMAIL">Email</option>
+            <option value="TITLE">Title</option>
+        </select>
+    </div>
+    <button id="submitBtn" class="btn btn-primary mt-3">Submit</button>
+    <h2 class="mt-5">Output</h2>
+    <pre id="output" class="bg-light p-3"></pre>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script>
+    document.getElementById('submitBtn').addEventListener('click', function () {
+        const inputText = document.getElementById('inputText').value;
+        const type = document.getElementById('type').value;
 
+        fetch(`/api/v1/ner?type=${type}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: inputText
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+</body>
+</html>
